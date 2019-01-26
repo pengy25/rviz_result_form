@@ -1,0 +1,70 @@
+#! /usr/bin/env python
+
+import rospy
+import rosbag
+
+import json
+
+from sensor_msgs.msg import PointCloud2
+from visualization_msgs.msg import MarkerArray
+from visualization_msgs.msg import Marker
+from std_msgs.msg import String
+
+def readBag(file_path):
+    bag = rosbag.Bag(file_path)
+    cloud = None
+    markers = None
+    params_str = None
+
+    for topic, msg, t in bag.read_messages():
+        if topic == 'cloud':
+            cloud = msg
+        elif topic == 'markers':
+            markers = msg
+        elif topic == 'params_in_json':
+            params_str = msg.data
+        else:
+            continue
+
+    bag.close()
+
+    return (cloud, markers, params_str)
+
+def main():
+    rospy.init_node('rviz_result_form_publisher_node')
+    while rospy.Time().now().to_sec() == 0:
+        pass
+
+    cloud_pub = rospy.Publisher('cloud', PointCloud2, queue_size=200)
+    marker_pub = rospy.Publisher('markers', MarkerArray, queue_size=200)
+    json_str_pub = rospy.Publisher('json_str_pub', String, queue_size=200)
+
+    current_bag = None
+    cloud = None
+    markers = MarkerArray()
+
+    while not rospy.is_shutdown():
+        if rospy.get_param('bag_to_read') != '' and current_bag != rospy.get_param('bag_to_read'):
+            marker_arr = MarkerArray()
+            for marker in markers.markers:
+                marker_to_delete = Marker()
+                marker_to_delete.header = marker.header
+                marker_to_delete.ns = marker.ns
+                marker_to_delete.id = marker.id
+                marker_to_delete.action = marker_to_delete.DELETE
+                marker_arr.markers.append(marker_to_delete)
+            marker_pub.publish(marker_arr)
+
+            current_bag = rospy.get_param('bag_to_read')
+            cloud, markers, data_str = readBag("../" + current_bag)
+
+        # Keep publishing cloud, markers and json string
+        if current_bag is not None:
+            cloud_pub.publish(cloud)
+            marker_pub.publish(markers)
+            json_str_pub.publish(data_str)
+
+    print "Process shutdown as rospy is shutdown"
+
+if __name__ == '__main__':
+    main()

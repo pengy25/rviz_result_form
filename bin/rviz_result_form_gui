@@ -1,0 +1,23 @@
+#! /usr/bin/env python
+
+import rospy
+import sys
+from python_qt_binding.QtGui import QApplication
+from rviz_result_form import RvizFrame
+
+def main():
+    app = QApplication(sys.argv)
+    lst = ['saved_exp_result_1.bag', 'saved_exp_result_2.bag']
+
+    rospy.init_node("rviz_result_form_subscriber_node")
+    while rospy.Time.now().to_sec() == 0:
+        pass
+
+    frame = RvizFrame(lst)
+    frame.resize(500, 500)
+    frame.show()
+    sys.exit(app.exec_())
+
+
+if __name__ == '__main__':
+    main()

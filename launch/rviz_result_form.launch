@@ -1,0 +1,5 @@
+<launch>
+  <param name="bag_to_read" value=""/>
+  <node pkg="rviz_result_form" name="rviz_result_form_gui" type="rviz_result_form_gui" cwd="node"></node>
+  <node pkg="rviz_result_form" name="rviz_result_form_publisher" type="rviz_result_form_publisher" cwd="node"></node>
+</launch>

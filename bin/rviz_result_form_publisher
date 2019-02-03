@@ -32,7 +32,7 @@ def readBag(file_path):
 
 def main():
     rospy.init_node('rviz_result_form_publisher_node')
-    while rospy.Time().now().to_sec() == 0:
+    while rospy.Time().now().to_sec() == 0 or not rospy.has_param('bag_to_read'):
         pass
 
     cloud_pub = rospy.Publisher('cloud', PointCloud2, queue_size=200)
@@ -44,7 +44,7 @@ def main():
     markers = MarkerArray()
 
     while not rospy.is_shutdown():
-        if rospy.get_param('bag_to_read') != '' and current_bag != rospy.get_param('bag_to_read'):
+        if current_bag != rospy.get_param('bag_to_read'):
             marker_arr = MarkerArray()
             for marker in markers.markers:
                 marker_to_delete = Marker()
@@ -58,11 +58,9 @@ def main():
             current_bag = rospy.get_param('bag_to_read')
             cloud, markers, data_str = readBag("../" + current_bag)
 
-        # Keep publishing cloud, markers and json string
-        if current_bag is not None:
-            cloud_pub.publish(cloud)
-            marker_pub.publish(markers)
-            json_str_pub.publish(data_str)
+        cloud_pub.publish(cloud)
+        marker_pub.publish(markers)
+        json_str_pub.publish(data_str)
 
     print "Process shutdown as rospy is shutdown"
 

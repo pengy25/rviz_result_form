@@ -3,11 +3,17 @@ import sys
 from python_qt_binding.QtGui import QWidget, QLineEdit, QLabel, QHBoxLayout, QApplication
 
 class SingleInputForm(QWidget):
-    def __init__(self):
+    def __init__(self, label="", value=""):
         QWidget.__init__(self)
         layout = QHBoxLayout()
         self.label = QLabel()
         self.value = QLineEdit()
+
+        label = str(label)
+        value = str(value)
+        self.label.setText(label)
+        self.value.setText(value)
+
         layout.addWidget(self.label)
         layout.addWidget(self.value)
         self.setLayout(layout)
@@ -16,6 +22,7 @@ class SingleInputForm(QWidget):
         self.label.setText(text)
 
     def set_value(self, text):
+        text = str(text)
         self.value.setText(text)
 
     def get_value(self):

@@ -19,6 +19,7 @@ class SingleInputForm(QWidget):
         self.setLayout(layout)
 
     def set_label(self, text):
+        text = str(text)
         self.label.setText(text)
 
     def set_value(self, text):

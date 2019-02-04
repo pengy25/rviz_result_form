@@ -14,7 +14,6 @@ def main():
         pass
 
     frame = RvizFrame(lst)
-    frame.resize(500, 500)
     frame.show()
     sys.exit(app.exec_())
 

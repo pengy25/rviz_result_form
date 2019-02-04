@@ -51,6 +51,7 @@ class InputHandler(QWidget):
         if self.curr_bag is not None and self.curr_bag != bag_name:
             self.mgr_lst[self.curr_bag].hide()
 
+        self.mgr_lst[bag_name].refresh()
         self.mgr_lst[bag_name].show()
         self.curr_bag = bag_name
 

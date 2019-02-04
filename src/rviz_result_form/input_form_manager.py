@@ -1,7 +1,7 @@
 import sys
 
 from python_qt_binding.QtGui import QWidget, QVBoxLayout, QApplication
-from single_input_form import SingleInputForm
+from .single_input_form import SingleInputForm
 
 class InputFormManager(QWidget):
     def __init__(self, label_value_pr):

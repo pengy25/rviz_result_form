@@ -3,8 +3,6 @@
 import rospy
 import rosbag
 
-import json
-
 from sensor_msgs.msg import PointCloud2
 from visualization_msgs.msg import MarkerArray
 from visualization_msgs.msg import Marker
@@ -56,7 +54,7 @@ def main():
             marker_pub.publish(marker_arr)
 
             current_bag = rospy.get_param('bag_to_read')
-            cloud, markers, data_str = readBag("../" + current_bag)
+            cloud, markers, data_str = readBag("../exp_results/" + current_bag)
 
         cloud_pub.publish(cloud)
         marker_pub.publish(markers)

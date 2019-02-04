@@ -6,6 +6,8 @@ import sys
 from python_qt_binding.QtGui import *
 from python_qt_binding.QtCore import *
 
+from std_msgs.msg import String
+
 from input_handler import InputHandler
 
 class RvizFrame(QWidget):
@@ -31,13 +33,16 @@ class RvizFrame(QWidget):
         self.nextButton = QPushButton('next')
         self.nextButton.clicked.connect(self.readNextBag)
 
-        self.input_handler = InputHandler(self.bag_lst)
+        self.input_handler = InputHandler()
 
         layout = QVBoxLayout()
         layout.addWidget(self.frame)
         layout.addWidget(self.nextButton)
         layout.addWidget(self.input_handler)
         self.setLayout(layout)
+
+        # pyqt event is not supported in multithreading...
+        #self.json_str_sub = rospy.Subscriber('json_str_pub', String, self.input_handler.input_update_callback)
 
     def readNextBag(self):
         self.lst_idx += 1

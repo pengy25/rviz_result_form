@@ -1,6 +1,6 @@
 import sys
 
-from python_qt_binding.QtGui import QWidget, QVBoxLayout, QApplication
+from python_qt_binding.QtGui import QWidget, QVBoxLayout
 from .single_input_form import SingleInputForm
 
 class InputFormManager(QWidget):
@@ -46,10 +46,3 @@ class InputFormManager(QWidget):
             res += ',' + self.form_state[name]
 
         return res
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    names = [('name1', 1), ('name2', None)]
-    mgr = InputFormManager(names)
-    mgr.show()
-    app.exec_()

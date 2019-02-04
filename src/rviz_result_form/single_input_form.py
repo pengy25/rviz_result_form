@@ -1,6 +1,6 @@
 import sys
 
-from python_qt_binding.QtGui import QWidget, QLineEdit, QLabel, QHBoxLayout, QApplication
+from python_qt_binding.QtGui import QWidget, QLineEdit, QLabel, QHBoxLayout
 
 class SingleInputForm(QWidget):
     def __init__(self, label="", value=""):

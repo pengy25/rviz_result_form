@@ -1,30 +1,49 @@
 import rospy
+import json
 
 from python_qt_binding.QtGui import QWidget, QLabel, QVBoxLayout
+from .input_form_manager import InputFormManager
 
 class InputHandler(QWidget):
-    def __init__(self, file_lst):
+    def __init__(self):
         QWidget.__init__(self)
-        self.file_lst = list(file_lst)
-        for file_name in self.file_lst:
+
+        while not rospy.has_param('bag_to_read'):
             pass
-        layout = QVBoxLayout()
-        self.setLayout(layout)
+
+        self.layout = QVBoxLayout()
+        self.setLayout(self.layout)
 
         if len(rospy.get_name()) == 0:
             rospy.logerr("Error: the node has not been initialized!")
         else:
-            rospy.loginfo("Received node name as %s", rospy.get_name())
-
-        self.json_str = ""
+            rospy.loginfo("Received node name as %s", rospy.get_name)
 
 
+        self.mgr_lst = {}
+        self.curr_bag = None
 
     def input_update_callback(self, msg):
-        if self.json_str == msg.data:
-            return
+        bag_name = rospy.get_param('bag_to_read')
+        if bag_name not in self.mgr_lst:
+            json_dict = json.loads(msg.data)
+            label_value_pr = []
+            keys = sorted(json_dict.keys())
+            for key in keys:
+                label = str(key)
+                value = str(json_dict[key])
+                label_value_pr.append((label, value))
 
-        self.json_str = ""
+            mgr = InputFormManager(label_value_pr)
+            self.mgr_lst[bag_name] = mgr
+            self.layout.addWidget(mgr)
+
+        if self.curr_bag is not None and self.curr_bag != bag_name:
+            self.mgr_lst[self.curr_bag].hide()
+
+        self.mgr_lst[bag_name].show()
+        self.curr_bag = bag_name
+
 
     def write_to_file(self, location):
         pass

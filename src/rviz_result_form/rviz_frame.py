@@ -35,16 +35,20 @@ class RvizFrame(QWidget):
 
         self.input_handler = InputHandler()
 
-        layout = QVBoxLayout()
-        layout.addWidget(self.frame)
-        layout.addWidget(self.nextButton)
-        layout.addWidget(self.input_handler)
-        self.setLayout(layout)
+        vLayout = QVBoxLayout()
+        vLayout.addWidget(self.frame)
+        vLayout.addWidget(self.nextButton)
+        hLayout = QHBoxLayout()
+        hLayout.addLayout(vLayout)
+        hLayout.addWidget(self.input_handler)
+        self.setLayout(hLayout)
 
         # pyqt event is not supported in multithreading...
         #self.json_str_sub = rospy.Subscriber('json_str_pub', String, self.input_handler.input_update_callback)
+        self.input_handler.input_update_callback()
 
     def readNextBag(self):
         self.lst_idx += 1
         self.lst_idx %= len(self.bag_lst)
         rospy.set_param('bag_to_read', self.bag_lst[self.lst_idx])
+        self.input_handler.input_update_callback()

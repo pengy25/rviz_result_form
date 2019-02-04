@@ -22,11 +22,21 @@ class InputHandler(QWidget):
 
         self.mgr_lst = {}
         self.curr_bag = None
+        self.json_str = None
 
-    def input_update_callback(self, msg):
+    def input_update_callback(self):
         bag_name = rospy.get_param('bag_to_read')
+        while not rospy.has_param('json_str'):
+            pass
+
         if bag_name not in self.mgr_lst:
-            json_dict = json.loads(msg.data)
+
+            json_str = rospy.get_param('json_str')
+            while json_str == self.json_str:
+                json_str = rospy.get_param('json_str')
+            self.json_str = json_str
+
+            json_dict = json.loads(self.json_str)
             label_value_pr = []
             keys = sorted(json_dict.keys())
             for key in keys:

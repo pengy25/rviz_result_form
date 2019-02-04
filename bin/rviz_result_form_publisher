@@ -35,7 +35,6 @@ def main():
 
     cloud_pub = rospy.Publisher('cloud', PointCloud2, queue_size=200)
     marker_pub = rospy.Publisher('markers', MarkerArray, queue_size=200)
-    json_str_pub = rospy.Publisher('json_str_pub', String, queue_size=200)
 
     current_bag = None
     cloud = None
@@ -58,7 +57,7 @@ def main():
 
         cloud_pub.publish(cloud)
         marker_pub.publish(markers)
-        json_str_pub.publish(data_str)
+        rospy.set_param('json_str', data_str)
 
     print "Process shutdown as rospy is shutdown"
 
